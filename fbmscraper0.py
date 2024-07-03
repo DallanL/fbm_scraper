@@ -22,6 +22,8 @@ driver_loc = os.getenv('DRIVER_LOC')
 google_creds = os.getenv('GOOGLE_CREDS')
 cookie_file = os.getenv('FB_COOKIE')
 sheet_key = "1PegKY7IeELKeCivpI_CYbD368Y3cCXvWbDPEIW4jmhw"
+chrome_bin = os.getenv('CHROME_BINARY')
+
 client = authenticate_google_sheets(google_creds)
 
 def kill_chrome_processes():
@@ -42,7 +44,8 @@ def crawl_facebook_marketplace(city):
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--window-size=1920x1080")
-    chrome_options.binary_location='/home/dallanl00mis/Downloads/chrome-linux64/chrome'
+    if chrome_bin:
+        chrome_options.binary_location=chrome_bin
     
     # Block notifications
     prefs = {"profile.default_content_setting_values.notifications": 2}
