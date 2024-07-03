@@ -9,14 +9,14 @@ import os
 
 load_dotenv()
 driver_loc = os.getenv('DRIVER_LOC')
-
+chrome_bin = os.getenv('CHROME_BINARY')
 
 def save_facebook_cookies():
     chrome_options = Options()
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--window-size=1920x1080")
-    chrome_options.binary_location='/home/dallanl00mis/Downloads/chrome-linux64/chrome'
+    chrome_options.binary_location=chrome_bin
 
     service = Service(driver_loc)
     driver = webdriver.Chrome(service=service, options=chrome_options)
