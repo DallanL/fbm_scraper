@@ -1,0 +1,5 @@
+selenium==4.22.0
+bs4==0.0.2
+psutil==5.9.0
+gspread==6.1.2
+oauth2client==4.1.3

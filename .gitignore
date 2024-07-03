@@ -1,0 +1,15 @@
+# Ignore credentials and cookie files
+credentials.json
+facebook_cookies.pkl
+
+# Ignore environment variable file
+.env
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
