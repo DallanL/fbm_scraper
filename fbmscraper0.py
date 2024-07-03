@@ -21,7 +21,7 @@ api_key = os.getenv('GOOGLE_API_KEY')
 driver_loc = os.getenv('DRIVER_LOC')
 google_creds = os.getenv('GOOGLE_CREDS')
 cookie_file = os.getenv('FB_COOKIE')
-sheet_key = "1PegKY7IeELKeCivpI_CYbD368Y3cCXvWbDPEIW4jmhw"
+sheet_key = "1PegKY7IeELKeCivpI_CYbD368Y3cCXvWbDPEIW4jmhw" #jasril's pricing guide, used to get gpu price thresholds
 chrome_bin = os.getenv('CHROME_BINARY')
 
 client = authenticate_google_sheets(google_creds)
@@ -59,11 +59,9 @@ def crawl_facebook_marketplace(city):
         load_cookies(driver, cookie_file)
         WebDriverWait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
 
-        #time.sleep(2)
         driver.refresh()
         WebDriverWait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
         price_thresholds = get_price_thresholds(client, sheet_key)
-        #time.sleep(1)
         
         results = []
         for city in cities:
@@ -80,9 +78,6 @@ def crawl_facebook_marketplace(city):
             # Scrape data
             listings = soup.find_all('div', class_='x9f619 x78zum5 x1r8uery xdt5ytf x1iyjqo2 xs83m0k x1e558r4 x150jy0e x1iorvi4 xjkvuk6 xnpuxes x291uyu x1uepa24')
             print(f"Found {len(listings)} listings")
-
-            #price_thresholds = get_price_thresholds(client)
-            #print("Price thresholds:", price_thresholds)
 
             data = []
             for listing in listings:
@@ -102,6 +97,7 @@ def crawl_facebook_marketplace(city):
                     except Exception as e:
                         price = None
                         print("Error finding price:", e)
+                        continue
                 # Extract location
                     try:
                         #location = listing.find('span', 'x1lliihq x6ikm8r x10wlt62 x1n2onr6 xlyipyv xuxw1ft x1j85h84').text #windows11
@@ -110,6 +106,7 @@ def crawl_facebook_marketplace(city):
                             continue
                     except Exception as e:
                         location = "Location not found"
+                        continue
                     #    print("Error finding location:", e)
                     # Extract link
                     try:
@@ -120,8 +117,10 @@ def crawl_facebook_marketplace(city):
                             link = urljoin("https://facebook.com", base_link)
                         else:
                             link = 'Link not found'
+                            continue
                     except Exception as e:
                         link = "Link not found"
+                        continue
                     #    print("Error finding link:", e)
                     # Extract image
                     #try:
@@ -263,17 +262,8 @@ cities = {
         "tampa"
         }
 
-#cities = {
-#        "chicago"
-#        }
-#listings = []
-#for city in cities:
-#    new_listings = crawl_facebook_marketplace(city)
-#    listings.extend(new_listings)
 listings = crawl_facebook_marketplace(cities)
-#listings = crawl_facebook_marketplace(city)
-#for x in listings:
-#    print(x)
+
 if len(listings) > 0:
     # Write data to Google Sheets
     write_to_google_sheets(client, sheet_id, "Sheet1", listings)
